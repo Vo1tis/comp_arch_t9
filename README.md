@@ -1,6 +1,14 @@
 changelog:
 
 13/3/23:
+
+v2.
++ ex_stage.sv -> fixed some verilog stuff.
++ simulation.do -> removed vsim ' -novopt ' argument, as it doesnt work properly in modelsim 2020.1
++ simulation works fine now, but we dont know what is going on anymore :')
+
+
+v1.
 Not yet tested!
 Added MUL (and MULHU) instructions.
 
