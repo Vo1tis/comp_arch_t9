@@ -1,0 +1,37 @@
+
+tutorial.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	00008537          	lui	a0,0x8
+   4:	00050113          	mv	sp,a0
+   8:	008000ef          	jal	ra,10 <main>
+
+0000000c <hang>:
+   c:	0000006f          	j	c <hang>
+
+00000010 <main>:
+  10:	fd010113          	addi	sp,sp,-48
+  14:	02812623          	sw	s0,44(sp)
+  18:	03010413          	addi	s0,sp,48
+  1c:	fca42e23          	sw	a0,-36(s0)
+  20:	fcb42c23          	sw	a1,-40(s0)
+  24:	02000793          	li	a5,32
+  28:	fef42623          	sw	a5,-20(s0)
+  2c:	04b00793          	li	a5,75
+  30:	fef42423          	sw	a5,-24(s0)
+  34:	fec42703          	lw	a4,-20(s0)
+  38:	fe842783          	lw	a5,-24(s0)
+  3c:	00e7d863          	bge	a5,a4,4c <main+0x3c>
+  40:	fec42783          	lw	a5,-20(s0)
+  44:	fef42423          	sw	a5,-24(s0)
+  48:	00c0006f          	j	54 <main+0x44>
+  4c:	fe842783          	lw	a5,-24(s0)
+  50:	fef42623          	sw	a5,-20(s0)
+  54:	00000793          	li	a5,0
+  58:	00078513          	mv	a0,a5
+  5c:	02c12403          	lw	s0,44(sp)
+  60:	03010113          	addi	sp,sp,48
+  64:	00008067          	ret
