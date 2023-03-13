@@ -2,6 +2,8 @@ changelog:
 
 13/3/23:
 
+v3. formatting
+
 v2.
 + ex_stage.sv -> fixed some verilog stuff.
 + simulation.do -> removed vsim ' -novopt ' argument, as it doesnt work properly in modelsim 2020.1
