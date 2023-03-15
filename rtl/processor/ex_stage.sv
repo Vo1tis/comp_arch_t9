@@ -113,13 +113,13 @@ always_comb begin
 		`ALU_SLTU:	result = {31'd0, (opa < opb)};
 		
 		`ALU_MUL: 	begin
-					temp =   opa * opb;
-					result = temp[31:0];
-				end
-		`ALU_MULHU: 	begin
-					temp =   opa * opb;
-					result = temp[63:32];
-				end
+						temp =   opa * opb;
+						result = temp[31:0];
+					end
+		`ALU_MULHU: begin
+						temp =   opa * opb;
+						result = temp[63:32];
+					end
 					
 		default: 	result = 32'hbaadbeef;  
 	endcase	

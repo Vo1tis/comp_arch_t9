@@ -1,8 +1,13 @@
 changelog:
+--- --- ---
 
+15/3/23:
+
++ added some testbench options (+ test hex files for MUL and MULHU)
++ still need to figure out the signals testing stuff on modelsim
+
+--- --- ---
 13/3/23:
-
-v3. formatting
 
 v2.
 + ex_stage.sv -> fixed some verilog stuff.
