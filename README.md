@@ -1,6 +1,13 @@
 changelog:
 --- --- ---
 
+30/3/23:
+
++ replaced testbench files with a given one
++ cleaned up a bit
+
+--- --- ---
+
 15/3/23:
 
 + added some testbench options (+ test hex files for MUL and MULHU)
