@@ -1,6 +1,15 @@
 changelog:
 --- --- ---
 
+# LAB 2 #
+
+3/4/23:
+
++ attempt at Makefile
++ added stalls to instruction decode stage (id_stage.sv)
+
+--- --- ---
+
 30/3/23:
 
 + replaced testbench files with a given one
@@ -37,3 +46,7 @@ Added MUL (and MULHU) instructions.
 hello
 
 update:cloned some stuff here and there
+
+# LAB 1 #
+
+--- --- ---

@@ -202,8 +202,17 @@ assign rb_idx=if_id_IR[24:20];	// inst operand B register index
 assign rc_idx=if_id_IR[11:7];  // inst operand C register index
 // Instantiate the register file used by this pipeline
 
+
 logic write_en;
-assign write_en=mem_wb_valid_inst & mem_wb_reg_wr;
+
+logic staller;
+logic [4:0] rd_writestage;
+
+assign rd_writestage = mem_wb_dest_reg_idx;
+assign staller = (rd_writestage == ra_idx || rd_writestage == rb_idx);	// shall i stall?
+
+assign write_en=mem_wb_valid_inst & mem_wb_reg_wr & (~staller);
+
 
 regfile regf_0(.clk		(clk),
 			   .rst		(rst),
@@ -281,11 +290,23 @@ always_comb begin : immediate_mux
 	endcase
 end
 
-assign pc_add_opa =(if_id_IR[6:0] == `I_JAL_TYPE)? id_ra_value_out:if_id_PC;
+if (staller) begin
 
+	assign pc_add_opa = if_id_PC;
 
-//target PC to branch to
+	//target PC to branch to
+	logic [2:0] noop = 3'b000;
+	assign id_funct3_out = noop;
 
-assign id_funct3_out = if_id_IR[14:12];
+end
+else begin 
+
+	assign pc_add_opa =(if_id_IR[6:0] == `I_JAL_TYPE)? id_ra_value_out:if_id_PC;
+
+	//target PC to branch to
+	assign id_funct3_out = if_id_IR[14:12];
+	
+end
+
 
 endmodule // module id_stage
