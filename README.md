@@ -5,6 +5,11 @@ changelog:
 
 8/4/23:
 
+v2.
++ moved all testbench stuff inside /create_tb/ directory
++ cleaned up a bit
+
+v1.
 (instr fetch stage is still unchanged)
 + decode stage: stalls rearranged (lines 21-27 & lines 293-309)
 + execute stage: PC doesnt change if new instructions aren't valid (line 72)
