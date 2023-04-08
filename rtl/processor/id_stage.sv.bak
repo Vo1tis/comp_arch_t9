@@ -18,13 +18,7 @@ output logic 		illegal,    // non-zero on an illegal instruction
 output logic 		valid_inst  // for counting valid instructions executed
 );
 
-logic staller;
-logic [4:0] rd_writestage;
-
-assign rd_writestage = mem_wb_dest_reg_idx;
-assign staller = (rd_writestage == ra_idx || rd_writestage == rb_idx);	// shall i stall?
-
-assign valid_inst =valid_inst_in & ~illegal & ~staller;
+assign valid_inst =valid_inst_in & ~illegal;
 
 always_comb begin
 	// - invalid instructions should clear valid_inst.
@@ -210,6 +204,12 @@ assign rc_idx=if_id_IR[11:7];  // inst operand C register index
 
 
 logic write_en;
+
+logic staller;
+logic [4:0] rd_writestage;
+
+assign rd_writestage = mem_wb_dest_reg_idx;
+assign staller = (rd_writestage == ra_idx || rd_writestage == rb_idx);	// shall i stall?
 
 assign write_en=mem_wb_valid_inst & mem_wb_reg_wr & (~staller);
 

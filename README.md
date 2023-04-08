@@ -3,12 +3,23 @@ changelog:
 
 # LAB 2 #
 
+8/4/23:
+
+(instr fetch stage is still unchanged)
++ decode stage: stalls rearranged (lines 21-27 & lines 293-309)
++ execute stage: PC doesnt change if new instructions aren't valid (line 72)
++ (subject to change) testbench file 'testhex.c', in main directory
+
+--- --- ---
+
 3/4/23:
 
 + attempt at Makefile
 + added stalls to instruction decode stage (id_stage.sv)
 
 --- --- ---
+
+# LAB 1 #
 
 30/3/23:
 
@@ -46,7 +57,5 @@ Added MUL (and MULHU) instructions.
 hello
 
 update:cloned some stuff here and there
-
-# LAB 1 #
 
 --- --- ---

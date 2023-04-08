@@ -70,7 +70,7 @@ alu alu_0 (// Inputs
 // stall
 
 if (id_ex_valid_inst) begin
-	assign ex_target_PC_out = pc_add_opa + id_ex_imm; //normal PC progression
+	assign ex_target_PC_out = pc_add_opa + id_ex_imm; //original 
 end else begin
 	assign ex_target_PC_out = id_ex_PC;
 end
