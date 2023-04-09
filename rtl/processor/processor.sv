@@ -223,7 +223,7 @@ id_stage id_stage_0 (
 //                                              //
 //////////////////////////////////////////////////
 
-assign if_id_enable = ~(if_id_PC == id_ex_PC)? 1 : 0;
+assign id_ex_enable = ~(if_id_PC == id_ex_PC)? 1 : 0;
 //assign id_ex_enable =1; // disabled when HzDU initiates a stall
 // synopsys sync_set_rst "rst"
 

@@ -18,20 +18,7 @@ output logic 		illegal,    // non-zero on an illegal instruction
 output logic 		valid_inst  // for counting valid instructions executed
 );
 
-logic staller;
-logic [4:0] rd_writestage;
-logic [4:0] rd_wbstage;
-
-assign rd_mem_writestage = mem_wb_dest_reg_idx;	//mem_wb rd
-assign rd_wbstage = wb_reg_wr_data_out[11:7];	//wb rd
-
-logic arg1 = (rd_mem_writestage == ra_idx || rd_mem_writestage == rb_idx);
-logic arg2 = (rd_wbstage == ra_idx || rd_wbstage == rb_idx);
-
-assign staller = (arg1 || arg2);	// shall i stall?
-									// makes write_en = 0
-									
-assign valid_inst =valid_inst_in & ~illegal;// & ~staller;
+assign valid_inst =valid_inst_in & ~illegal;
 
 always_comb begin
 	// - invalid instructions should clear valid_inst.
@@ -215,6 +202,18 @@ assign rb_idx=if_id_IR[24:20];	// inst operand B register index
 assign rc_idx=if_id_IR[11:7];  // inst operand C register index
 // Instantiate the register file used by this pipeline
 
+// stall
+logic staller;
+logic [4:0] rd_writestage;
+logic [4:0] rd_wbstage;
+
+assign rd_mem_writestage = mem_wb_dest_reg_idx;	//mem_wb rd
+assign rd_wbstage = wb_reg_wr_data_out[11:7];	//wb rd
+
+logic arg1 = (rd_mem_writestage == ra_idx || rd_mem_writestage == rb_idx);
+logic arg2 = (rd_wbstage == ra_idx || rd_wbstage == rb_idx);
+
+assign staller = (arg1 || arg2);	// shall i stall?
 
 logic write_en;
 

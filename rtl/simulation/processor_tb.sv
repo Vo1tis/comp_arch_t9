@@ -113,10 +113,12 @@ initial begin
 	forever #5 clk=~clk;
 end
 
-initial begin
-	logic [2:0] what = 3; //what test?
+logic [2:0] what;
 
-	if (what ==0) begin //lab1_tb
+initial begin
+	what = 3; //what test?
+
+	if (what == 0) begin //lab1_tb
 		$readmemh("testshex.txt",IM.unified_memory);
 		$readmemh("testshex.txt",DM.unified_memory);
 	end
