@@ -20,11 +20,18 @@ output logic 		valid_inst  // for counting valid instructions executed
 
 logic staller;
 logic [4:0] rd_writestage;
+logic [4:0] rd_wbstage;
 
-assign rd_writestage = mem_wb_dest_reg_idx;
-assign staller = (rd_writestage == ra_idx || rd_writestage == rb_idx);	// shall i stall?
+assign rd_mem_writestage = mem_wb_dest_reg_idx;	//mem_wb rd
+assign rd_wbstage = wb_reg_wr_data_out[11:7];	//wb rd
 
-assign valid_inst =valid_inst_in & ~illegal & ~staller;
+logic arg1 = (rd_mem_writestage == ra_idx || rd_mem_writestage == rb_idx);
+logic arg2 = (rd_wbstage == ra_idx || rd_wbstage == rb_idx);
+
+assign staller = (arg1 || arg2);	// shall i stall?
+									// makes write_en = 0
+									
+assign valid_inst =valid_inst_in & ~illegal;// & ~staller;
 
 always_comb begin
 	// - invalid instructions should clear valid_inst.
@@ -290,23 +297,23 @@ always_comb begin : immediate_mux
 	endcase
 end
 
-if (staller) begin
+//if (staller) begin
 
-	assign pc_add_opa = if_id_PC;
+//	assign pc_add_opa = if_id_PC;
 
 	//target PC to branch to
-	logic [2:0] noop = 3'b000;
-	assign id_funct3_out = noop;
+//	logic [2:0] noop = 3'b000;
+//	assign id_funct3_out = noop;
 
-end
-else begin 
+//end
+//else begin 
 
 	assign pc_add_opa =(if_id_IR[6:0] == `I_JAL_TYPE)? id_ra_value_out:if_id_PC;
 
 	//target PC to branch to
 	assign id_funct3_out = if_id_IR[14:12];
 	
-end
+//end
 
 
 endmodule // module id_stage

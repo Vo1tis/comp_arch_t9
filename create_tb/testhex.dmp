@@ -7,11 +7,113 @@ Disassembly of section .text:
 00000000 <_start>:
    0:	00008537          	lui	a0,0x8
    4:	00050113          	mv	sp,a0
-   8:	008000ef          	jal	ra,10 <main>
+   8:	04c000ef          	jal	ra,54 <main>
 
 0000000c <hang>:
    c:	0000006f          	j	c <hang>
 
-00000010 <main>:
-  10:	00000513          	li	a0,0
-  14:	00008067          	ret
+00000010 <fun>:
+  10:	00200293          	li	t0,2
+  14:	00555663          	bge	a0,t0,20 <elseF>
+  18:	00100513          	li	a0,1
+  1c:	00008067          	ret
+
+00000020 <elseF>:
+  20:	ff810113          	addi	sp,sp,-8
+  24:	00112223          	sw	ra,4(sp)
+  28:	00a12023          	sw	a0,0(sp)
+  2c:	fff50513          	addi	a0,a0,-1 # 7fff <main+0x7fab>
+  30:	fe1ff0ef          	jal	ra,10 <fun>
+  34:	000502b3          	add	t0,a0,zero
+  38:	00412083          	lw	ra,4(sp)
+  3c:	00012503          	lw	a0,0(sp)
+  40:	00810113          	addi	sp,sp,8
+  44:	02550533          	mul	a0,a0,t0
+  48:	00008067          	ret
+	...
+
+00000054 <main>:
+  54:	fd010113          	addi	sp,sp,-48
+  58:	02812623          	sw	s0,44(sp)
+  5c:	03010413          	addi	s0,sp,48
+  60:	00500793          	li	a5,5
+  64:	fef42623          	sw	a5,-20(s0)
+  68:	00700793          	li	a5,7
+  6c:	fef42423          	sw	a5,-24(s0)
+  70:	00100793          	li	a5,1
+  74:	fef42223          	sw	a5,-28(s0)
+  78:	00300793          	li	a5,3
+  7c:	fef42023          	sw	a5,-32(s0)
+  80:	00400793          	li	a5,4
+  84:	fcf42e23          	sw	a5,-36(s0)
+  88:	fc042c23          	sw	zero,-40(s0)
+  8c:	0600006f          	j	ec <main+0x98>
+  90:	fec42703          	lw	a4,-20(s0)
+  94:	fe842783          	lw	a5,-24(s0)
+  98:	00f707b3          	add	a5,a4,a5
+  9c:	fef42623          	sw	a5,-20(s0)
+  a0:	fe842703          	lw	a4,-24(s0)
+  a4:	fe442783          	lw	a5,-28(s0)
+  a8:	00f707b3          	add	a5,a4,a5
+  ac:	fef42423          	sw	a5,-24(s0)
+  b0:	fe442703          	lw	a4,-28(s0)
+  b4:	fe042783          	lw	a5,-32(s0)
+  b8:	00f707b3          	add	a5,a4,a5
+  bc:	fef42223          	sw	a5,-28(s0)
+  c0:	fe042703          	lw	a4,-32(s0)
+  c4:	fdc42783          	lw	a5,-36(s0)
+  c8:	00f707b3          	add	a5,a4,a5
+  cc:	fef42023          	sw	a5,-32(s0)
+  d0:	fdc42703          	lw	a4,-36(s0)
+  d4:	fec42783          	lw	a5,-20(s0)
+  d8:	00f707b3          	add	a5,a4,a5
+  dc:	fcf42e23          	sw	a5,-36(s0)
+  e0:	fd842783          	lw	a5,-40(s0)
+  e4:	00178793          	addi	a5,a5,1
+  e8:	fcf42c23          	sw	a5,-40(s0)
+  ec:	fd842703          	lw	a4,-40(s0)
+  f0:	00900793          	li	a5,9
+  f4:	f8e7dee3          	bge	a5,a4,90 <main+0x3c>
+  f8:	00400793          	li	a5,4
+  fc:	fef42623          	sw	a5,-20(s0)
+ 100:	00300793          	li	a5,3
+ 104:	fef42423          	sw	a5,-24(s0)
+ 108:	00100793          	li	a5,1
+ 10c:	fef42223          	sw	a5,-28(s0)
+ 110:	00700793          	li	a5,7
+ 114:	fef42023          	sw	a5,-32(s0)
+ 118:	00500793          	li	a5,5
+ 11c:	fcf42e23          	sw	a5,-36(s0)
+ 120:	fc042a23          	sw	zero,-44(s0)
+ 124:	0600006f          	j	184 <main+0x130>
+ 128:	fec42703          	lw	a4,-20(s0)
+ 12c:	fdc42783          	lw	a5,-36(s0)
+ 130:	00f707b3          	add	a5,a4,a5
+ 134:	fef42623          	sw	a5,-20(s0)
+ 138:	fe842703          	lw	a4,-24(s0)
+ 13c:	fec42783          	lw	a5,-20(s0)
+ 140:	00f707b3          	add	a5,a4,a5
+ 144:	fef42423          	sw	a5,-24(s0)
+ 148:	fe442703          	lw	a4,-28(s0)
+ 14c:	fe842783          	lw	a5,-24(s0)
+ 150:	00f707b3          	add	a5,a4,a5
+ 154:	fef42223          	sw	a5,-28(s0)
+ 158:	fe042703          	lw	a4,-32(s0)
+ 15c:	fe442783          	lw	a5,-28(s0)
+ 160:	00f707b3          	add	a5,a4,a5
+ 164:	fef42023          	sw	a5,-32(s0)
+ 168:	fdc42703          	lw	a4,-36(s0)
+ 16c:	fe042783          	lw	a5,-32(s0)
+ 170:	00f707b3          	add	a5,a4,a5
+ 174:	fcf42e23          	sw	a5,-36(s0)
+ 178:	fd442783          	lw	a5,-44(s0)
+ 17c:	00178793          	addi	a5,a5,1
+ 180:	fcf42a23          	sw	a5,-44(s0)
+ 184:	fd442703          	lw	a4,-44(s0)
+ 188:	00900793          	li	a5,9
+ 18c:	f8e7dee3          	bge	a5,a4,128 <main+0xd4>
+ 190:	00000793          	li	a5,0
+ 194:	00078513          	mv	a0,a5
+ 198:	02c12403          	lw	s0,44(sp)
+ 19c:	03010113          	addi	sp,sp,48
+ 1a0:	00008067          	ret

@@ -162,7 +162,8 @@ if_stage if_stage_0 (
 //            IF/ID Pipeline Register           //
 //                                              //
 //////////////////////////////////////////////////
-assign if_id_enable = 1;
+
+assign if_id_enable = ~(if_id_PC == if_PC_out)? 1 : 0;
 
 always_ff @(posedge clk or posedge rst) begin
 	if(rst) begin
@@ -221,8 +222,13 @@ id_stage id_stage_0 (
 //            ID/EX Pipeline Register           //
 //                                              //
 //////////////////////////////////////////////////
-assign id_ex_enable =1; // disabled when HzDU initiates a stall
+
+assign if_id_enable = ~(if_id_PC == id_ex_PC)? 1 : 0;
+//assign id_ex_enable =1; // disabled when HzDU initiates a stall
 // synopsys sync_set_rst "rst"
+
+
+
 always_ff @(posedge clk or posedge rst) begin
 	if (rst) begin //sys_rst
 		//Control
@@ -273,6 +279,32 @@ always_ff @(posedge clk or posedge rst) begin
 			id_ex_uncond_branch <=  id_uncond_branch;
 			id_ex_cond_branch	<=  id_cond_branch;
 		end // if
+		else begin //if stall
+			//Control
+			id_ex_funct3		<=  0;
+			id_ex_opa_select    <=  `ALU_OPA_IS_REGA;
+			id_ex_opb_select    <=  `ALU_OPB_IS_REGB;
+			id_ex_alu_func      <=  `ALU_ADD;
+			id_ex_rd_mem        <=  0;
+			id_ex_wr_mem        <=  0;
+			id_ex_illegal       <=  0;
+			id_ex_valid_inst    <=  `FALSE;
+			id_ex_reg_wr        <=  `FALSE;
+			
+			//Data
+			id_ex_PC            <=  0;
+			id_ex_IR            <=  `NOOP_INST;
+			id_ex_rega          <=  0;
+			id_ex_regb          <=  0;
+			id_ex_imm			<=  0;
+			id_ex_dest_reg_idx  <=  `ZERO_REG;
+			id_ex_pc_add_opa	<=  0;
+			id_ex_uncond_branch <=  0;
+			id_ex_cond_branch	<=  0;
+			
+			//Debug
+			id_ex_NPC           <=  0;
+		end
     end // else: !if(rst)
 end // always
 
@@ -345,6 +377,54 @@ always_ff @(posedge clk or posedge rst) begin
 			ex_mem_target_PC	<=  ex_target_PC_out;			
 			ex_mem_NPC			<=  id_ex_NPC;
 		end // if
+		if (~if_id_enable && ex_take_branch_out) begin //if branch while stalling
+			if_id_PC         <=  0;
+			if_id_IR         <=  `NOOP_INST;
+			if_id_NPC        <=  0;
+			if_id_valid_inst <=  0;
+			
+			//Control
+			id_ex_funct3		<=  0;
+			id_ex_opa_select    <=  `ALU_OPA_IS_REGA;
+			id_ex_opb_select    <=  `ALU_OPB_IS_REGB;
+			id_ex_alu_func      <=  `ALU_ADD;
+			id_ex_rd_mem        <=  0;
+			id_ex_wr_mem        <=  0;
+			id_ex_illegal       <=  0;
+			id_ex_valid_inst    <=  `FALSE;
+			id_ex_reg_wr        <=  `FALSE;
+			
+			//Data
+			id_ex_PC            <=  0;
+			id_ex_IR            <=  `NOOP_INST;
+			id_ex_rega          <=  0;
+			id_ex_regb          <=  0;
+			id_ex_imm			<=  0;
+			id_ex_dest_reg_idx  <=  `ZERO_REG;
+			id_ex_pc_add_opa	<=  0;
+			id_ex_uncond_branch <=  0;
+			id_ex_cond_branch	<=  0;
+			
+			//Debug
+			id_ex_NPC           <=  0;
+			
+			//Control
+			ex_mem_funct3		<=  0;
+			ex_mem_rd_mem       <=  0;
+			ex_mem_wr_mem       <=  0;
+			ex_mem_illegal      <=  0;
+			ex_mem_valid_inst   <=  `FALSE;
+			ex_mem_reg_wr       <=  `FALSE;
+			//Data
+			ex_mem_IR           <=  `NOOP_INST;
+			ex_mem_dest_reg_idx <=  `ZERO_REG;
+			ex_mem_regb         <=  0;
+			ex_mem_alu_result   <=  0;
+			ex_mem_take_branch	<=  0;
+			ex_mem_target_PC	<=  0;		
+			//Debug
+			ex_mem_NPC			<=  0;
+		end
 	end // else: !if(rst)
 end // always
 

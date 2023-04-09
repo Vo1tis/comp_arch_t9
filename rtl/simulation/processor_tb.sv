@@ -114,23 +114,27 @@ initial begin
 end
 
 initial begin
-	//logic [1:0] what = 0; //what test?
+	logic [2:0] what = 3; //what test?
 
-	//if (what ==0) begin
+	if (what ==0) begin //lab1_tb
 		$readmemh("testshex.txt",IM.unified_memory);
 		$readmemh("testshex.txt",DM.unified_memory);
-	//end
+	end
 	
-	//if (what ==1) begin
+	//if (what == 1) begin
 	//	$readmemh("testshex_mul.txt",IM.unified_memory); //test MUL
 	//	$readmemh("testshex_mul.txt",DM.unified_memory);
 	//end
 	
-	//if (what ==2) begin
+	//if (what == 2) begin
 	//	$readmemh("testshex_mulhu.txt",IM.unified_memory); //test MULHU
 	//	$readmemh("testshex_mulhu.txt",DM.unified_memory);
 	//end
 	
+	if (what == 3) begin //lab2_tb
+		$readmemh("lab2_tb.txt",IM.unified_memory);
+		$readmemh("lab2_tb.txt",DM.unified_memory);
+	end	
 end
 
 initial begin

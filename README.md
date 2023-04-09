@@ -3,6 +3,28 @@ changelog:
 
 # LAB 2 #
 
+9/4/23:
+
++ fetch stage:		PC_enable is off when stalling
++ decode stage:		write_en is off when stalling (lines 22-31, line 221)
+
+- decode stage: 	no longer changing PC state (when stalling) from here
+- execute stage:	no longer affected by 'valid' signal
+
+processor.sv changes:
+
++ added stall conditions when PC stays unchanged (lines 166, 266)
++ zap and flush when stalling on if/id stage (lines 282-307)
++ zap and flush every previous stage if branching while a stall is active (lines 380-427)
+
+simulation:
+
++ updated the testbench stuff
++ new tb file & updated the processor_tb.sv file under rtl/simulation
++ needs some testing
+
+--- --- ---
+
 8/4/23:
 
 v2.

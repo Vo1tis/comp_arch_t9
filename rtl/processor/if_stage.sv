@@ -23,7 +23,6 @@ logic 	PC_enable;
 
 assign proc2Imem_addr ={PC_reg[31:2], 2'b0};
 
-
 assign if_IR_out = Imem2proc_data;
 
 // default next PC value
@@ -33,7 +32,11 @@ assign PC_plus_4 = PC_reg + 4;
 assign next_PC = (ex_take_branch_out) ? ex_target_PC_out : PC_plus_4;
 
 // stall PC
-assign PC_enable = if_valid_inst_out | ex_take_branch_out;
+logic stall_PC;			//PC_rd == mem_rs1 or mem_rs2 ?
+assign stall_PC = (PC_reg[11:7] == Imem2proc_data[19:15] | PC_reg[11:7] == Imem2proc_data[24:20]) ? 1 : 0;
+
+assign PC_enable = if_valid_inst_out | ex_take_branch_out & ~stall_PC;
+
 
 // Pass PC down pipeline w/instruction
 assign if_PC_out = PC_reg;

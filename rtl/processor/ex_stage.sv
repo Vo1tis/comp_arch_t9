@@ -67,13 +67,11 @@ alu alu_0 (// Inputs
 		  .brcond_result(brcond_result));
 
 
-// stall
-
-if (id_ex_valid_inst) begin
+//if (id_ex_valid_inst) begin
 	assign ex_target_PC_out = pc_add_opa + id_ex_imm; //normal PC progression
-end else begin
-	assign ex_target_PC_out = id_ex_PC;
-end
+//end else begin
+//	assign ex_target_PC_out = id_ex_PC;
+//end
 
 
 assign ex_take_branch_out = (uncond_branch | (cond_branch & brcond_result)) & id_ex_valid_inst;
