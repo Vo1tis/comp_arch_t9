@@ -8,6 +8,7 @@ module if_stage  (input logic 	      clk,             // system clk
 			      input logic   	  ex_take_branch_out,// taken-branch signal
 				  input logic [31:0]  ex_target_PC_out,  // target pc: use if take_branch is TRUE
 				  input logic [31:0]  Imem2proc_data,    // Data coming back from instruction-memory
+				  input logic		  staller,
 					
 				  output logic [31:0] proc2Imem_addr,    // Address sent to Instruction memory
 				  output logic [31:0] if_PC_out,         // current PC
@@ -32,11 +33,7 @@ assign PC_plus_4 = PC_reg + 4;
 assign next_PC = (ex_take_branch_out) ? ex_target_PC_out : PC_plus_4;
 
 // stall PC
-logic stall_PC;			//PC_rd == mem_rs1 or mem_rs2 ?
-assign stall_PC = (PC_reg[11:7] == Imem2proc_data[19:15] | PC_reg[11:7] == Imem2proc_data[24:20]) ? 1 : 0;
-
-assign PC_enable = if_valid_inst_out | ex_take_branch_out & ~stall_PC;
-
+assign PC_enable = ~staller;
 
 // Pass PC down pipeline w/instruction
 assign if_PC_out = PC_reg;
@@ -50,12 +47,15 @@ always_ff @(posedge clk) begin
 		PC_reg <= next_PC; // transition to next PC
 end 
 
+assign if_valid_inst_out = 1;
 
+/*
 always_ff @(posedge clk) begin
 	if (rst)
 		if_valid_inst_out <= 1; 
 	else
 		if_valid_inst_out <= mem_wb_valid_inst;
 end
+*/
 
 endmodule  // module if_stage

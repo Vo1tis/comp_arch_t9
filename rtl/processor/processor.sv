@@ -133,6 +133,7 @@ assign pipeline_commit_wr_data 	= wb_reg_wr_data_out;
 assign pipeline_commit_NPC 		= if_NPC_out;
 assign pipeline_commit_wr 		= mem_wb_reg_wr;
 
+logic staller;
 
 //////////////////////////////////////////////////
 //                                              //
@@ -147,6 +148,8 @@ if_stage if_stage_0 (
 .ex_take_branch_out	(ex_mem_take_branch),
 .ex_target_PC_out	(ex_mem_target_PC),
 .Imem2proc_data		(instruction),
+
+.staller			(staller),
 
 
 // Outputs
@@ -163,10 +166,10 @@ if_stage if_stage_0 (
 //                                              //
 //////////////////////////////////////////////////
 
-assign if_id_enable = ~(if_id_PC == if_PC_out)? 1 : 0;
+assign if_id_enable = ~(staller);
 
 always_ff @(posedge clk or posedge rst) begin
-	if(rst) begin
+	if(rst | ex_mem_take_branch) begin
 		if_id_PC         <=  0;
 		if_id_IR         <=  `NOOP_INST;
 		if_id_NPC        <=  0;
@@ -198,7 +201,14 @@ id_stage id_stage_0 (
 .wb_reg_wr_data_out     (wb_reg_wr_data_out),  	
 .if_id_valid_inst       (if_id_valid_inst),
 
+.wb_stage_rd			(mem_wb_dest_reg_idx),
+.mem_stage_rd			(ex_mem_dest_reg_idx),
+.ex_stage_rd			(id_ex_dest_reg_idx),
+
 // Outputs
+
+.staller				(staller),
+
 .id_reg_wr_out          (id_reg_wr_out),
 .id_funct3_out			(id_funct3_out),
 .id_ra_value_out		(id_rega_out),
@@ -223,14 +233,14 @@ id_stage id_stage_0 (
 //                                              //
 //////////////////////////////////////////////////
 
-assign id_ex_enable = ~(if_id_PC == id_ex_PC)? 1 : 0;
+assign id_ex_enable = ~(staller);
 //assign id_ex_enable =1; // disabled when HzDU initiates a stall
 // synopsys sync_set_rst "rst"
 
 
 
 always_ff @(posedge clk or posedge rst) begin
-	if (rst) begin //sys_rst
+	if (rst | ex_mem_take_branch) begin //sys_rst
 		//Control
 		id_ex_funct3		<=  0;
 		id_ex_opa_select    <=  `ALU_OPA_IS_REGA;
@@ -279,7 +289,7 @@ always_ff @(posedge clk or posedge rst) begin
 			id_ex_uncond_branch <=  id_uncond_branch;
 			id_ex_cond_branch	<=  id_cond_branch;
 		end // if
-		else begin //if stall
+/*		else begin //if stall
 			//Control
 			id_ex_funct3		<=  0;
 			id_ex_opa_select    <=  `ALU_OPA_IS_REGA;
@@ -305,6 +315,7 @@ always_ff @(posedge clk or posedge rst) begin
 			//Debug
 			id_ex_NPC           <=  0;
 		end
+		*/
     end // else: !if(rst)
 end // always
 
@@ -343,7 +354,7 @@ ex_stage ex_stage_0 (
 assign ex_mem_enable = 1; // always enabled
 // synopsys sync_set_rst "rst"
 always_ff @(posedge clk or posedge rst) begin
-	if (rst) begin
+	if (rst | ex_mem_take_branch) begin
 		//Control
 		ex_mem_funct3		<=  0;
 		ex_mem_rd_mem       <=  0;
@@ -377,7 +388,7 @@ always_ff @(posedge clk or posedge rst) begin
 			ex_mem_target_PC	<=  ex_target_PC_out;			
 			ex_mem_NPC			<=  id_ex_NPC;
 		end // if
-		if (~if_id_enable && ex_take_branch_out) begin //if branch while stalling
+		/*if (~ex_mem_enable && ex_take_branch_out) begin //if branch while stalling
 			if_id_PC         <=  0;
 			if_id_IR         <=  `NOOP_INST;
 			if_id_NPC        <=  0;
@@ -425,6 +436,7 @@ always_ff @(posedge clk or posedge rst) begin
 			//Debug
 			ex_mem_NPC			<=  0;
 		end
+		*/
 	end // else: !if(rst)
 end // always
 

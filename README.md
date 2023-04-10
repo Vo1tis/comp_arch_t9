@@ -3,6 +3,12 @@ changelog:
 
 # LAB 2 #
 
+10/4/23:
+
+Troubleshooting pt.1
+
+--- --- ---
+
 9/4/23:
 
 v2.

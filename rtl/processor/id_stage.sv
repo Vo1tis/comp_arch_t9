@@ -169,6 +169,12 @@ input logic [4:0]	mem_wb_dest_reg_idx, 	//index of rd
 input logic [31:0] 	wb_reg_wr_data_out, 	// Reg write data from WB Stage
 input logic         if_id_valid_inst,
 
+input logic [4:0]	ex_stage_rd,
+input logic [4:0]	mem_stage_rd,
+input logic [4:0]	wb_stage_rd,
+
+output logic 		staller,
+
 output logic [31:0] id_ra_value_out,    	// reg A value
 output logic [31:0] id_rb_value_out,    	// reg B value
 output logic [31:0]	id_immediate_out,		// sign-extended 32-bit immediate
@@ -203,21 +209,20 @@ assign rc_idx=if_id_IR[11:7];  // inst operand C register index
 // Instantiate the register file used by this pipeline
 
 // stall
-logic staller;
-logic [4:0] rd_writestage;
-logic [4:0] rd_wbstage;
 
-assign rd_mem_writestage = mem_wb_dest_reg_idx;	//mem_wb rd
-assign rd_wbstage = wb_reg_wr_data_out[11:7];	//wb rd
+logic arg1; 
+assign arg1 = ( (mem_stage_rd == ra_idx || mem_stage_rd == rb_idx) && mem_stage_rd != 0 );
+logic arg2; 
+assign arg2 = ( (wb_stage_rd == ra_idx || wb_stage_rd == rb_idx) && wb_stage_rd != 0 );
+logic arg3;
+assign arg3 = ( (ex_stage_rd == ra_idx || ex_stage_rd == rb_idx) && ex_stage_rd != 0 );
 
-logic arg1 = (rd_mem_writestage == ra_idx || rd_mem_writestage == rb_idx);
-logic arg2 = (rd_wbstage == ra_idx || rd_wbstage == rb_idx);
 
-assign staller = (arg1 || arg2);	// shall i stall?
+assign staller = (arg1 || arg2 || arg3);	// shall i stall?
 
 logic write_en;
 
-assign write_en=mem_wb_valid_inst & mem_wb_reg_wr & (~staller);
+assign write_en=mem_wb_valid_inst & mem_wb_reg_wr;
 
 
 regfile regf_0(.clk		(clk),
