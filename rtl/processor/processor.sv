@@ -240,7 +240,7 @@ assign id_ex_enable = ~(staller);
 
 
 always_ff @(posedge clk or posedge rst) begin
-	if (rst | ex_mem_take_branch) begin //sys_rst
+	if (rst) begin //sys_rst
 		//Control
 		id_ex_funct3		<=  0;
 		id_ex_opa_select    <=  `ALU_OPA_IS_REGA;
@@ -289,7 +289,7 @@ always_ff @(posedge clk or posedge rst) begin
 			id_ex_uncond_branch <=  id_uncond_branch;
 			id_ex_cond_branch	<=  id_cond_branch;
 		end // if
-/*		else begin //if stall
+		else begin //if stall
 			//Control
 			id_ex_funct3		<=  0;
 			id_ex_opa_select    <=  `ALU_OPA_IS_REGA;
@@ -315,7 +315,7 @@ always_ff @(posedge clk or posedge rst) begin
 			//Debug
 			id_ex_NPC           <=  0;
 		end
-		*/
+		
     end // else: !if(rst)
 end // always
 
