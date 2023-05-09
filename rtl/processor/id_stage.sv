@@ -169,11 +169,18 @@ input logic [4:0]	mem_wb_dest_reg_idx, 	//index of rd
 input logic [31:0] 	wb_reg_wr_data_out, 	// Reg write data from WB Stage
 input logic         if_id_valid_inst,
 
+
 input logic [4:0]	ex_stage_rd,
 input logic [4:0]	mem_stage_rd,
 input logic [4:0]	wb_stage_rd,
 
+input logic [31:0]	ex_stage_rdout,
+input logic [31:0]	mem_stage_rdout,
+input logic [31:0]	wb_stage_rdout,
+
+output logic		forward,
 output logic 		staller,
+
 
 output logic [31:0] id_ra_value_out,    	// reg A value
 output logic [31:0] id_rb_value_out,    	// reg B value
@@ -201,12 +208,14 @@ logic [31:0] rb_val;
 //instruction fields read from IF/ID pipeline register
 logic[4:0] ra_idx; 
 logic[4:0] rb_idx; 
-logic[4:0] rc_idx; 
+logic[4:0] rc_idx;
+
 
 assign ra_idx=if_id_IR[19:15];	// inst operand A register index
 assign rb_idx=if_id_IR[24:20];	// inst operand B register index
 assign rc_idx=if_id_IR[11:7];  // inst operand C register index
 // Instantiate the register file used by this pipeline
+
 
 // stall
 
@@ -218,7 +227,12 @@ logic arg3;
 assign arg3 = ( (ex_stage_rd == ra_idx || ex_stage_rd == rb_idx) && ex_stage_rd != 0 );
 
 
-assign staller = (arg1 || arg2 || arg3);	// shall i stall?
+// forward, rc_idx is rd of new instruction from if stage
+assign forward =  (arg3 && (rc_idx != ex_stage_rd)) || (arg2 && (rc_idx != wb_stage_rd)) || (arg1 && (rc_idx != mem_stage_rd));
+
+
+assign staller = ~forward && (arg1 || arg2 || arg3);	// shall i stall?
+
 
 logic write_en;
 
@@ -227,10 +241,25 @@ assign write_en=mem_wb_valid_inst & mem_wb_reg_wr;
 
 regfile regf_0(.clk		(clk),
 			   .rst		(rst),
+			   
 			   .rda_idx	(ra_idx),
-			   .rda_out	(id_ra_value_out), 
+			   .rda_out	(id_ra_value_out),
+			   
 			   .rdb_idx	(rb_idx),
-			   .rdb_out	(rb_val), 
+			   .rdb_out	(rb_val),
+			   
+			   
+			   .forward			(forward),
+			   
+			   .ex_stage_rd		(ex_stage_rd),
+			   .mem_stage_rd	(mem_stage_rd),
+			   .wb_stage_rd		(wb_stage_rd),
+			   
+			   .ex_stage_rdout	(ex_stage_rdout),
+			   .mem_stage_rdout	(mem_stage_rdout),
+			   .wb_stage_rdout	(wb_stage_rdout),
+			   
+			   
 			   .wr_en	(write_en),
 			   .wr_idx	(mem_wb_dest_reg_idx),
 			   .wr_data	(wb_reg_wr_data_out));

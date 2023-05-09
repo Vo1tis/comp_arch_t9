@@ -11,6 +11,8 @@ module mem_stage(
     input logic      	ex_mem_wr_mem,      // write memory? (from decoder)
     input logic [31:0] 	Dmem2proc_data,
     input logic         ex_mem_valid_inst,
+	
+	//output logic		forward,
 
     output logic [31:0]	mem_result_out,    	// outgoing instruction result (to MEM/WB)
     output logic [1:0] 	proc2Dmem_command,	

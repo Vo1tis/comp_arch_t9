@@ -19,6 +19,9 @@ input logic [2:0]   id_ex_funct3,
 input logic 		uncond_branch,
 input logic 		cond_branch,
 //output
+
+//output logic		forward,
+
 output logic 		ex_take_branch_out,
 output logic [31:0] ex_target_PC_out,
 output logic [31:0] ex_alu_result_out    // The arithmetic result. Needs to be renamed

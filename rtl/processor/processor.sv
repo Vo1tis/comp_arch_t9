@@ -135,6 +135,8 @@ assign pipeline_commit_wr 		= mem_wb_reg_wr;
 
 logic staller;
 
+logic forward;
+
 //////////////////////////////////////////////////
 //                                              //
 //                  IF-Stage                    //
@@ -205,7 +207,13 @@ id_stage id_stage_0 (
 .mem_stage_rd			(ex_mem_dest_reg_idx),
 .ex_stage_rd			(id_ex_dest_reg_idx),
 
+.ex_stage_rdout			(ex_alu_result_out),
+.mem_stage_rdout		(mem_result_out),
+.wb_stage_rdout			(wb_reg_wr_data_out),
+
 // Outputs
+
+.forward				(forward),
 
 .staller				(staller),
 
@@ -341,6 +349,9 @@ ex_stage ex_stage_0 (
 .uncond_branch			(id_ex_uncond_branch),
 .cond_branch			(id_ex_cond_branch),
 // Outputs
+
+//.forward				(forward),
+
 .ex_take_branch_out		(ex_take_branch_out),
 .ex_target_PC_out		(ex_target_PC_out),
 .ex_alu_result_out		(ex_alu_result_out)
@@ -388,55 +399,6 @@ always_ff @(posedge clk or posedge rst) begin
 			ex_mem_target_PC	<=  ex_target_PC_out;			
 			ex_mem_NPC			<=  id_ex_NPC;
 		end // if
-		/*if (~ex_mem_enable && ex_take_branch_out) begin //if branch while stalling
-			if_id_PC         <=  0;
-			if_id_IR         <=  `NOOP_INST;
-			if_id_NPC        <=  0;
-			if_id_valid_inst <=  0;
-			
-			//Control
-			id_ex_funct3		<=  0;
-			id_ex_opa_select    <=  `ALU_OPA_IS_REGA;
-			id_ex_opb_select    <=  `ALU_OPB_IS_REGB;
-			id_ex_alu_func      <=  `ALU_ADD;
-			id_ex_rd_mem        <=  0;
-			id_ex_wr_mem        <=  0;
-			id_ex_illegal       <=  0;
-			id_ex_valid_inst    <=  `FALSE;
-			id_ex_reg_wr        <=  `FALSE;
-			
-			//Data
-			id_ex_PC            <=  0;
-			id_ex_IR            <=  `NOOP_INST;
-			id_ex_rega          <=  0;
-			id_ex_regb          <=  0;
-			id_ex_imm			<=  0;
-			id_ex_dest_reg_idx  <=  `ZERO_REG;
-			id_ex_pc_add_opa	<=  0;
-			id_ex_uncond_branch <=  0;
-			id_ex_cond_branch	<=  0;
-			
-			//Debug
-			id_ex_NPC           <=  0;
-			
-			//Control
-			ex_mem_funct3		<=  0;
-			ex_mem_rd_mem       <=  0;
-			ex_mem_wr_mem       <=  0;
-			ex_mem_illegal      <=  0;
-			ex_mem_valid_inst   <=  `FALSE;
-			ex_mem_reg_wr       <=  `FALSE;
-			//Data
-			ex_mem_IR           <=  `NOOP_INST;
-			ex_mem_dest_reg_idx <=  `ZERO_REG;
-			ex_mem_regb         <=  0;
-			ex_mem_alu_result   <=  0;
-			ex_mem_take_branch	<=  0;
-			ex_mem_target_PC	<=  0;		
-			//Debug
-			ex_mem_NPC			<=  0;
-		end
-		*/
 	end // else: !if(rst)
 end // always
 
@@ -459,6 +421,9 @@ mem_stage mem_stage_0 (
 .ex_mem_valid_inst	(ex_mem_valid_inst),
 
 // Outputs
+
+//.forward			(forward),
+
 .mem_result_out		(mem_result_out),
 .proc2Dmem_command	(proc2Dmem_command),
 .proc2Dmem_addr		(proc2Dmem_addr),
@@ -517,6 +482,8 @@ wb_stage wb_stage_0(
 .mem_wb_alu_result	(mem_wb_alu_result),
 .mem_wb_rd_mem		(mem_wb_rd_mem),
 .mem_wb_valid_inst  (mem_wb_valid_inst),
+
+//.forward			(forward),
 		
 .wb_reg_wr_data_out	(wb_reg_wr_data_out)
 );

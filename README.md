@@ -1,6 +1,27 @@
 changelog:
 --- --- ---
 
+# LAB 3 #
+
+9/5/23:
+
+decode stage:
++ 'forward' signal added as output
++ 'staller' signal now affected by new 'forward' signal
+				
+processor.sv:
++ initialised 'forward' signal, and added inputs to ID stage for EX, MEM and WB stage rd's outgoing data
++ cleaned up a bit
+
+regfile.sv:
++ ported inputs from decode stage: Rd's values and data from EX, MEM and WB stages
++ now forwarding Rd's data from EX, MEM or WB stage to new instruction's Rs1 or Rs2, if forward signal is one
+
+modelsim simulation:
++ we do not get any register movement anymore :(
+
+--- --- ---
+
 # LAB 2 #
 
 11/4/23:

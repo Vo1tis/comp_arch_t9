@@ -7,6 +7,8 @@ module wb_stage(
 	input logic [31:0] mem_wb_alu_result,
 	input logic mem_wb_rd_mem,
 	input logic mem_wb_valid_inst,
+		
+	//output logic		forward,
 	
 	output logic [31:0] wb_reg_wr_data_out
 );
