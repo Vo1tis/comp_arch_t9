@@ -34,23 +34,5 @@ int main(){
 		x5 = x5 + x4;
 	}
 	
-	x1 = 2;//rand() % 10;
-	x2 = 4;//rand() % 10;
-	x3 = 6;//rand() % 10;
-	x4 = 3;//rand() % 10;
-	x5 = 5;//rand() % 10;
-	
-	for (int i=0; i<5; i++){ // Stall test (test 2)
-		x1 = x1 + x5;
-		x2 = x2 + x1;
-		x3 = x3 + x2;
-		
-		x2 = x2 + x4;
-		x3 = x1 + x2;
-		
-		x4 = x4 + x3;
-		x5 = x5 + x4;
-	}
-	
 	return 0;
 }

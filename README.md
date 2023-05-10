@@ -3,6 +3,17 @@ changelog:
 
 # LAB 3 #
 
+10/5/23:
+
+decode stage:
++ forward now checks for EX,MEM and WB stage Rd, in relation to new instruction's Rs1 and Rs2 registers.
++ staller now checks if new instruction is of load type; then checks Rs1's dependency to older Rd registers.
+
+testbench:
++ new testbench added; checks for forwarding and RAW stalls
+
+--- --- ---
+
 9/5/23:
 
 decode stage:

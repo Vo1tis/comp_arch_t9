@@ -116,7 +116,7 @@ end
 logic [2:0] what;
 
 initial begin
-	what = 3; //what test?
+	what = 4; //what test?
 
 	if (what == 0) begin //lab1_tb
 		$readmemh("testshex.txt",IM.unified_memory);
@@ -136,6 +136,10 @@ initial begin
 	if (what == 3) begin //lab2_tb
 		$readmemh("lab2_tb.txt",IM.unified_memory);
 		$readmemh("lab2_tb.txt",DM.unified_memory);
+	end
+	if (what == 4) begin //lab2_tb
+		$readmemh("lab3_tb.txt",IM.unified_memory);
+		$readmemh("lab3_tb.txt",DM.unified_memory);
 	end	
 end
 

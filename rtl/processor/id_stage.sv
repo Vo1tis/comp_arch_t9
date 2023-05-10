@@ -219,7 +219,10 @@ assign rc_idx=if_id_IR[11:7];  // inst operand C register index
 
 // stall
 
-logic arg1; 
+logic load_inc; // is the incoming instruction a load type?
+assign load_inc = (if_id_IR[6:0] == 7'b0000011);
+
+logic arg1;
 assign arg1 = ( (mem_stage_rd == ra_idx || mem_stage_rd == rb_idx) && mem_stage_rd != 0 );
 logic arg2; 
 assign arg2 = ( (wb_stage_rd == ra_idx || wb_stage_rd == rb_idx) && wb_stage_rd != 0 );
@@ -228,11 +231,12 @@ assign arg3 = ( (ex_stage_rd == ra_idx || ex_stage_rd == rb_idx) && ex_stage_rd 
 
 
 // forward, rc_idx is rd of new instruction from if stage
-assign forward =  (arg3 && (rc_idx != ex_stage_rd)) || (arg2 && (rc_idx != wb_stage_rd)) || (arg1 && (rc_idx != mem_stage_rd));
+//assign forward = (arg3 && (rc_idx != ex_stage_rd)) || (arg2 && (rc_idx != wb_stage_rd)) || (arg1 && (rc_idx != mem_stage_rd));
+assign forward = (arg1 || arg2 || arg3);
 
 
-assign staller = ~forward && (arg1 || arg2 || arg3);	// shall i stall?
-
+//assign staller = ~forward && (arg1 || arg2 || arg3);	// shall i stall?
+assign staller = load_inc && ((ra_idx == ex_stage_rd) || (ra_idx == mem_stage_rd) || (ra_idx == wb_stage_rd));
 
 logic write_en;
 

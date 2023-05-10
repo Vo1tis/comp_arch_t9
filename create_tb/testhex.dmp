@@ -112,8 +112,54 @@ Disassembly of section .text:
  184:	fd442703          	lw	a4,-44(s0)
  188:	00900793          	li	a5,9
  18c:	f8e7dee3          	bge	a5,a4,128 <main+0xd4>
- 190:	00000793          	li	a5,0
- 194:	00078513          	mv	a0,a5
- 198:	02c12403          	lw	s0,44(sp)
- 19c:	03010113          	addi	sp,sp,48
- 1a0:	00008067          	ret
+ 190:	00200793          	li	a5,2
+ 194:	fef42623          	sw	a5,-20(s0)
+ 198:	00400793          	li	a5,4
+ 19c:	fef42423          	sw	a5,-24(s0)
+ 1a0:	00600793          	li	a5,6
+ 1a4:	fef42223          	sw	a5,-28(s0)
+ 1a8:	00300793          	li	a5,3
+ 1ac:	fef42023          	sw	a5,-32(s0)
+ 1b0:	00500793          	li	a5,5
+ 1b4:	fcf42e23          	sw	a5,-36(s0)
+ 1b8:	fc042823          	sw	zero,-48(s0)
+ 1bc:	0800006f          	j	23c <main+0x1e8>
+ 1c0:	fec42703          	lw	a4,-20(s0)
+ 1c4:	fdc42783          	lw	a5,-36(s0)
+ 1c8:	00f707b3          	add	a5,a4,a5
+ 1cc:	fef42623          	sw	a5,-20(s0)
+ 1d0:	fe842703          	lw	a4,-24(s0)
+ 1d4:	fec42783          	lw	a5,-20(s0)
+ 1d8:	00f707b3          	add	a5,a4,a5
+ 1dc:	fef42423          	sw	a5,-24(s0)
+ 1e0:	fe442703          	lw	a4,-28(s0)
+ 1e4:	fe842783          	lw	a5,-24(s0)
+ 1e8:	00f707b3          	add	a5,a4,a5
+ 1ec:	fef42223          	sw	a5,-28(s0)
+ 1f0:	fe842703          	lw	a4,-24(s0)
+ 1f4:	fe042783          	lw	a5,-32(s0)
+ 1f8:	00f707b3          	add	a5,a4,a5
+ 1fc:	fef42423          	sw	a5,-24(s0)
+ 200:	fec42703          	lw	a4,-20(s0)
+ 204:	fe842783          	lw	a5,-24(s0)
+ 208:	00f707b3          	add	a5,a4,a5
+ 20c:	fef42223          	sw	a5,-28(s0)
+ 210:	fe042703          	lw	a4,-32(s0)
+ 214:	fe442783          	lw	a5,-28(s0)
+ 218:	00f707b3          	add	a5,a4,a5
+ 21c:	fef42023          	sw	a5,-32(s0)
+ 220:	fdc42703          	lw	a4,-36(s0)
+ 224:	fe042783          	lw	a5,-32(s0)
+ 228:	00f707b3          	add	a5,a4,a5
+ 22c:	fcf42e23          	sw	a5,-36(s0)
+ 230:	fd042783          	lw	a5,-48(s0)
+ 234:	00178793          	addi	a5,a5,1
+ 238:	fcf42823          	sw	a5,-48(s0)
+ 23c:	fd042703          	lw	a4,-48(s0)
+ 240:	00400793          	li	a5,4
+ 244:	f6e7dee3          	bge	a5,a4,1c0 <main+0x16c>
+ 248:	00000793          	li	a5,0
+ 24c:	00078513          	mv	a0,a5
+ 250:	02c12403          	lw	s0,44(sp)
+ 254:	03010113          	addi	sp,sp,48
+ 258:	00008067          	ret
