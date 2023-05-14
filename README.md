@@ -3,8 +3,22 @@ changelog:
 
 # LAB 3 #
 
+
 14/5/23:
 
+v2.
+
+decode stage:
++ adjusted some potential invalid 'forward' signal cases
++ moved forwarding operation from regfile to id_stage.sv
+
+simulation:
++ all signals now run properly
++ new warning: ' GetModuleFileName: The specified module could not be found. '
+
+v1.
+
+decode stage:
 + stall now checks for old load type instructions
 
 --- --- ---

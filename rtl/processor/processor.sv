@@ -134,8 +134,8 @@ assign pipeline_commit_NPC 		= if_NPC_out;
 assign pipeline_commit_wr 		= mem_wb_reg_wr;
 
 
-logic [31:0]	ex_stage_instruction;
-logic [31:0]	mem_stage_instruction;
+logic [31:0] ex_stage_instruction;
+logic [31:0] mem_stage_instruction;
 
 logic staller;
 

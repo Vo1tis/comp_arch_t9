@@ -207,6 +207,8 @@ output logic       	id_valid_inst_out	  	// is inst a valid instruction to be co
 );
    
 logic dest_reg_select;
+
+logic [31:0] ra_val;
 logic [31:0] rb_val;
 
 //instruction fields read from IF/ID pipeline register
@@ -235,13 +237,55 @@ logic arg3;
 assign arg3 = ( (ex_stage_rd == ra_idx || ex_stage_rd == rb_idx) && ex_stage_rd != 0 );
 
 
-// forward, rc_idx is rd of new instruction from if stage
-//assign forward = (arg3 && (rc_idx != ex_stage_rd)) || (arg2 && (rc_idx != wb_stage_rd)) || (arg1 && (rc_idx != mem_stage_rd));
-assign forward = (arg1 || arg2 || arg3);
-
-
 //assign staller = ~forward && (arg1 || arg2 || arg3);	// shall i stall?
 assign staller = ( old_load[1] || old_load[0] ) && ( arg3 || arg1 );
+
+
+// forward, rc_idx is rd of new instruction from if stage
+//assign forward = (arg3 && (rc_idx != ex_stage_rd)) || (arg2 && (rc_idx != wb_stage_rd)) || (arg1 && (rc_idx != mem_stage_rd));
+assign forward = (arg1 || arg2 || arg3) && ( (ex_stage_instruction != `NOOP_INST) && (mem_stage_instruction != `NOOP_INST) );
+
+
+logic [31:0] temp_a;
+logic [31:0] temp_b;
+		
+always_ff @(posedge clk or posedge rst) begin
+	
+	if (rst) begin
+		temp_a <= 0;
+		temp_b <= 0;
+	end
+	else begin
+		if (forward) begin
+			
+			if (ra_idx == ex_stage_rd) begin // ex_stage
+				temp_a <= ex_stage_rdout; // ex_alu_result_out
+			end else begin
+				if (ra_idx == mem_stage_rd) begin // mem_stage
+					temp_a <= mem_stage_rdout; // mem_result_out
+				end else begin
+					if (ra_idx == wb_stage_rd) begin // wb_stage
+						temp_a <= wb_stage_rdout;// wb_reg_wr_data_out
+					end
+				end
+			end
+			
+			if (rb_idx == ex_stage_rd) begin // ex_stage
+				temp_b = ex_stage_rdout;
+			end else begin
+				if (rb_idx == mem_stage_rd) begin // mem_stage
+					temp_b <= mem_stage_rdout;
+				end else begin
+					if (rb_idx == wb_stage_rd) begin // wb_stage
+						temp_b <= wb_stage_rdout;
+					end
+				end
+			end
+
+		end
+	end
+end
+
 
 logic write_en;
 
@@ -252,28 +296,18 @@ regfile regf_0(.clk		(clk),
 			   .rst		(rst),
 			   
 			   .rda_idx	(ra_idx),
-			   .rda_out	(id_ra_value_out),
+			   .rda_out	(ra_val),
 			   
 			   .rdb_idx	(rb_idx),
 			   .rdb_out	(rb_val),
-			   
-			   
-			   .forward			(forward),
-			   
-			   .ex_stage_rd		(ex_stage_rd),
-			   .mem_stage_rd	(mem_stage_rd),
-			   .wb_stage_rd		(wb_stage_rd),
-			   
-			   .ex_stage_rdout	(ex_stage_rdout),
-			   .mem_stage_rdout	(mem_stage_rdout),
-			   .wb_stage_rdout	(wb_stage_rdout),
-			   
-			   
+			   	   
 			   .wr_en	(write_en),
 			   .wr_idx	(mem_wb_dest_reg_idx),
 			   .wr_data	(wb_reg_wr_data_out));
 
-assign id_rb_value_out=rb_val;
+
+assign id_ra_value_out = (~forward)? ra_val:temp_a;
+assign id_rb_value_out = (~forward)? rb_val:temp_b;
 
 // instantiate the instruction inst_decoder
 inst_decoder inst_decoder_0(.inst	        (if_id_IR),
