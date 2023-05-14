@@ -3,6 +3,12 @@ changelog:
 
 # LAB 3 #
 
+14/5/23:
+
++ stall now checks for old load type instructions
+
+--- --- ---
+
 10/5/23:
 
 decode stage:

@@ -137,7 +137,7 @@ initial begin
 		$readmemh("lab2_tb.txt",IM.unified_memory);
 		$readmemh("lab2_tb.txt",DM.unified_memory);
 	end
-	if (what == 4) begin //lab2_tb
+	if (what == 4) begin //lab3_tb
 		$readmemh("lab3_tb.txt",IM.unified_memory);
 		$readmemh("lab3_tb.txt",DM.unified_memory);
 	end	

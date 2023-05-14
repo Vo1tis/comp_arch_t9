@@ -170,6 +170,10 @@ input logic [31:0] 	wb_reg_wr_data_out, 	// Reg write data from WB Stage
 input logic         if_id_valid_inst,
 
 
+
+input logic [31:0]	ex_stage_instruction,
+input logic [31:0]	mem_stage_instruction,
+
 input logic [4:0]	ex_stage_rd,
 input logic [4:0]	mem_stage_rd,
 input logic [4:0]	wb_stage_rd,
@@ -219,8 +223,9 @@ assign rc_idx=if_id_IR[11:7];  // inst operand C register index
 
 // stall
 
-logic load_inc; // is the incoming instruction a load type?
-assign load_inc = (if_id_IR[6:0] == 7'b0000011);
+logic [1:0] old_load; // older instruction of load type?
+assign old_load [1] = (ex_stage_instruction[6:0] == 7'b0000011);
+assign old_load [0] = (mem_stage_instruction[6:0] == 7'b0000011);
 
 logic arg1;
 assign arg1 = ( (mem_stage_rd == ra_idx || mem_stage_rd == rb_idx) && mem_stage_rd != 0 );
@@ -236,7 +241,7 @@ assign forward = (arg1 || arg2 || arg3);
 
 
 //assign staller = ~forward && (arg1 || arg2 || arg3);	// shall i stall?
-assign staller = load_inc && ((ra_idx == ex_stage_rd) || (ra_idx == mem_stage_rd) || (ra_idx == wb_stage_rd));
+assign staller = ( old_load[1] || old_load[0] ) && ( arg3 || arg1 );
 
 logic write_en;
 

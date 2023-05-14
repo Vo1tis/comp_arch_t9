@@ -133,6 +133,10 @@ assign pipeline_commit_wr_data 	= wb_reg_wr_data_out;
 assign pipeline_commit_NPC 		= if_NPC_out;
 assign pipeline_commit_wr 		= mem_wb_reg_wr;
 
+
+logic [31:0]	ex_stage_instruction;
+logic [31:0]	mem_stage_instruction;
+
 logic staller;
 
 logic forward;
@@ -210,6 +214,9 @@ id_stage id_stage_0 (
 .ex_stage_rdout			(ex_alu_result_out),
 .mem_stage_rdout		(mem_result_out),
 .wb_stage_rdout			(wb_reg_wr_data_out),
+
+.ex_stage_instruction	(id_ex_IR),
+.mem_stage_instruction	(ex_mem_IR),
 
 // Outputs
 
