@@ -238,34 +238,32 @@ assign arg3 = ( (ex_stage_rd == ra_idx || ex_stage_rd == rb_idx) && ex_stage_rd 
 
 
 //assign staller = ~forward && (arg1 || arg2 || arg3);	// shall i stall?
-assign staller = ( old_load[1] || old_load[0] ) && ( arg3 || arg1 );
+assign staller = ( old_load[1] && arg3 ) || (old_load[0] && arg1 );
 
 
 // forward, rc_idx is rd of new instruction from if stage
 //assign forward = (arg3 && (rc_idx != ex_stage_rd)) || (arg2 && (rc_idx != wb_stage_rd)) || (arg1 && (rc_idx != mem_stage_rd));
-assign forward = (arg1 || arg2 || arg3) && ( (ex_stage_instruction != `NOOP_INST) && (mem_stage_instruction != `NOOP_INST) );
+assign forward = (arg1 || arg3);
 
 
 logic [31:0] temp_a;
 logic [31:0] temp_b;
 		
-always_ff @(posedge clk or posedge rst) begin
+always_comb begin
 	
-	if (rst) begin
-		temp_a <= 0;
-		temp_b <= 0;
-	end
-	else begin
-		if (forward) begin
+	temp_a = 0;
+	temp_b = 0;
+	
+	if (forward) begin
 			
 			if (ra_idx == ex_stage_rd) begin // ex_stage
-				temp_a <= ex_stage_rdout; // ex_alu_result_out
+				temp_a = ex_stage_rdout; // ex_alu_result_out
 			end else begin
 				if (ra_idx == mem_stage_rd) begin // mem_stage
-					temp_a <= mem_stage_rdout; // mem_result_out
+					temp_a = mem_stage_rdout; // mem_result_out
 				end else begin
 					if (ra_idx == wb_stage_rd) begin // wb_stage
-						temp_a <= wb_stage_rdout;// wb_reg_wr_data_out
+						temp_a = wb_stage_rdout;// wb_reg_wr_data_out
 					end
 				end
 			end
@@ -274,13 +272,13 @@ always_ff @(posedge clk or posedge rst) begin
 				temp_b = ex_stage_rdout;
 			end else begin
 				if (rb_idx == mem_stage_rd) begin // mem_stage
-					temp_b <= mem_stage_rdout;
+					temp_b = mem_stage_rdout;
 				end else begin
 					if (rb_idx == wb_stage_rd) begin // wb_stage
-						temp_b <= wb_stage_rdout;
+						temp_b = wb_stage_rdout;
 					end
 				end
-			end
+			
 
 		end
 	end
@@ -289,7 +287,7 @@ end
 
 logic write_en;
 
-assign write_en=mem_wb_valid_inst & mem_wb_reg_wr;
+assign write_en = mem_wb_valid_inst && mem_wb_reg_wr;
 
 
 regfile regf_0(.clk		(clk),

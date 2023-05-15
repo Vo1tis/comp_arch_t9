@@ -3,6 +3,16 @@ changelog:
 
 # LAB 3 #
 
+15/5/23:
+
+Final version
+
+decode stage:
++ adjusted staller signal logic
++ adjusted forward signal logic and its effects
++ swapped forwarding's 'always_ff' block to an 'always_comb' one
+
+--- --- ---
 
 14/5/23:
 

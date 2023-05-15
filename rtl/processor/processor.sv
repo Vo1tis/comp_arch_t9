@@ -329,7 +329,7 @@ always_ff @(posedge clk or posedge rst) begin
 			
 			//Debug
 			id_ex_NPC           <=  0;
-		end
+		end 
 		
     end // else: !if(rst)
 end // always
